@@ -4,111 +4,118 @@
 <meta charset="UTF-8">
 <title>For My Valentine ❤️</title>
 
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Segoe UI', sans-serif;
-    }
+<!-- Romantic & clean fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
 
+<style>
     body {
         height: 100vh;
-        overflow: hidden;
-        background: linear-gradient(120deg, #ff758c, #ff7eb3);
+        margin: 0;
+        background: linear-gradient(120deg, #ffe6eb, #fff);
         display: flex;
         justify-content: center;
         align-items: center;
-        position: relative;
+        overflow: hidden;
+        font-family: 'Poppins', sans-serif;
     }
 
     /* Floating hearts */
     .heart {
         position: absolute;
         bottom: -20px;
-        font-size: 20px;
-        color: rgba(255, 255, 255, 0.7);
+        font-size: 18px;
         animation: float 6s linear infinite;
+        opacity: 0.7;
     }
 
     @keyframes float {
-        0% {
-            transform: translateY(0) scale(1);
-            opacity: 1;
-        }
-        100% {
-            transform: translateY(-110vh) scale(1.5);
-            opacity: 0;
-        }
+        0% { transform: translateY(0); opacity: 1; }
+        100% { transform: translateY(-110vh); opacity: 0; }
     }
 
     .card {
-        background: rgba(255, 255, 255, 0.95);
-        padding: 45px 50px;
-        border-radius: 20px;
+        background: white;
+        padding: 45px 55px;
+        border-radius: 22px;
         text-align: center;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+        box-shadow: 0 18px 45px rgba(0,0,0,0.18);
         position: relative;
         z-index: 2;
+        min-width: 320px;
     }
 
     h1 {
+        font-family: 'Pacifico', cursive;
         color: #e60073;
-        margin-bottom: 25px;
-        font-size: 30px;
+        font-size: 32px;
+        margin-bottom: 8px;
+    }
+
+    p {
+        color: #777;
+        font-size: 15px;
+        margin-bottom: 22px;
     }
 
     button {
-        padding: 14px 30px;
-        font-size: 18px;
-        border: none;
+        padding: 14px 34px;
+        font-size: 17px;
         border-radius: 30px;
+        border: none;
         cursor: pointer;
-        margin: 12px;
-        transition: 0.3s;
+        transition: all 0.3s ease;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 500;
     }
 
     #yesBtn {
         background: #ff4d6d;
         color: white;
-    }
-
-    #yesBtn:hover {
-        background: #e60050;
-        transform: scale(1.1);
+        box-shadow: 0 8px 18px rgba(255,77,109,0.4);
     }
 
     #noBtn {
-        background: #adb5bd;
+        background: #f2a7b5;
         color: white;
         position: absolute;
     }
 
     .final {
-        text-align: center;
-        animation: fadeIn 1.5s ease;
+        animation: fade 1.2s ease;
     }
 
     .final h1 {
-        font-size: 34px;
-        color: #e60073;
+        font-family: 'Pacifico', cursive;
+        font-size: 30px;
+        margin-bottom: 10px;
     }
 
     .final img {
         width: 220px;
-        margin: 25px 0;
-        border-radius: 15px;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        height: 220px;
+        object-fit: cover;
+        margin: 18px auto;
+        border-radius: 20px;
+        display: block;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
 
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: scale(0.8);
-        }
-        to {
-            opacity: 1;
-            transform: scale(1);
+    .final p {
+        font-size: 14px;
+        margin-top: 10px;
+    }
+
+    @keyframes fade {
+        from { opacity: 0; transform: scale(0.85); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    @media (max-width: 600px) {
+        h1 { font-size: 28px; }
+        .final h1 { font-size: 26px; }
+        .final img {
+            width: 180px;
+            height: 180px;
         }
     }
 </style>
@@ -118,37 +125,50 @@
 
 <div class="card" id="card">
     <h1>Will you be my Valentine? 💖</h1>
-    <button id="yesBtn">Yes ❤️</button>
-    <button id="noBtn">No 🙈</button>
+    <p>Choose wisely… 😉</p>
+    <button id="yesBtn">YES 💕</button>
+    <button id="noBtn">NO</button>
 </div>
 
 <script>
     const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
     const card = document.getElementById("card");
 
-    // NO button runs away
+    let noClicks = 0;
+    let yesScale = 1;
+
     noBtn.addEventListener("mouseover", () => {
-        const x = Math.random() * 250 - 125;
-        const y = Math.random() * 150 - 75;
+        noClicks++;
+
+        const x = Math.random() * 200 - 100;
+        const y = Math.random() * 120 - 60;
         noBtn.style.transform = `translate(${x}px, ${y}px)`;
+
+        if (noClicks > 2) {
+            yesScale += 0.1;
+            yesBtn.style.transform = `scale(${yesScale})`;
+            yesBtn.innerText = "YES 💕 (Getting closer...)";
+        }
     });
 
-    // YES clicked
-    document.getElementById("yesBtn").addEventListener("click", () => {
+    yesBtn.addEventListener("click", () => {
         card.innerHTML = `
             <div class="final">
-                <h1>I knew it! 💖</h1>
-                <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93" alt="Roses">
+                <h1>I knew it! Miss Tabassum 🎉</h1>
+                
+<img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93" alt="Roses">
                 <h1>
                     So you are the Valentine <br>
                     of <br>
                     <strong>Mr. Sattar ❤️</strong>
                 </h1>
+                <p>Forever and always 💑</p>
+                <p>(I mean, we both knew you'd say yes eventually 😄)</p>
             </div>
         `;
     });
 
-    // Create floating hearts
     setInterval(() => {
         const heart = document.createElement("div");
         heart.className = "heart";
@@ -156,7 +176,6 @@
         heart.style.left = Math.random() * 100 + "vw";
         heart.style.animationDuration = (Math.random() * 3 + 3) + "s";
         document.body.appendChild(heart);
-
         setTimeout(() => heart.remove(), 6000);
     }, 300);
 </script>
