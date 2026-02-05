@@ -118,6 +118,30 @@
             height: 180px;
         }
     }
+	#noBtn {
+    background: #f2a7b5;
+    color: white;
+    position: absolute;
+    width: 100px;
+    text-align: center;
+    border-radius: 30px;
+    font-size: 14px;
+    transition: top 0.3s ease, left 0.3s ease, transform 0.2s;
+    cursor: pointer;
+    z-index: 3;
+}
+.card {
+    background: white;
+    padding: 40px;
+    border-radius: 22px;
+    text-align: center;
+    box-shadow: 0 18px 45px rgba(0,0,0,0.18);
+    position: relative;
+    z-index: 2;
+    max-width: 90vw;
+    width: 360px;
+    margin: 20px;
+}
 </style>
 </head>
 
@@ -126,8 +150,10 @@
 <div class="card" id="card">
     <h1>Will you be my Valentine? 💖</h1>
     <p>Choose wisely… 😉</p>
-    <button id="yesBtn">YES 💕</button>
-    <button id="noBtn">NO</button>
+    <div class="button-group">
+  <button id="yesBtn">YES 💕</button>
+  <button id="noBtn">NO</button>
+</div>
 </div>
 
 <script>
@@ -138,37 +164,83 @@
     let noClicks = 0;
     let yesScale = 1;
 
-    noBtn.addEventListener("mouseover", () => {
+    const movementBoundary = {
+        padding: 100, // stays away from edges of screen
+        maxWidth: 400,  // movement area width
+        maxHeight: 300, // movement area height
+    };
+
+    function moveNoButton() {
+        const container = document.body;
+
+        // Get the viewport dimensions
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+
+        const noBtnWidth = 100;
+        const noBtnHeight = 40;
+
+        // Get a safe central area
+        const centerX = viewportWidth / 2;
+        const centerY = viewportHeight / 2;
+
+        // Move within a confined box around the center
+        const rangeX = movementBoundary.maxWidth / 2;
+        const rangeY = movementBoundary.maxHeight / 2;
+
+        const minX = centerX - rangeX;
+        const maxX = centerX + rangeX - noBtnWidth;
+
+        const minY = centerY - rangeY;
+        const maxY = centerY + rangeY - noBtnHeight;
+
+        // Random position within range
+        const x = Math.floor(Math.random() * (maxX - minX)) + minX;
+        const y = Math.floor(Math.random() * (maxY - minY)) + minY;
+
+        noBtn.style.left = `${x}px`;
+        noBtn.style.top = `${y}px`;
+        noBtn.style.position = 'absolute';
+
+        // Button wiggle animation
+        noBtn.animate([
+            { transform: 'rotate(0deg) scale(1)' },
+            { transform: 'rotate(7deg) scale(1.05)' },
+            { transform: 'rotate(-7deg) scale(1.05)' },
+            { transform: 'rotate(0deg) scale(1)' }
+        ], {
+            duration: 300,
+            easing: 'ease-in-out'
+        });
+
         noClicks++;
 
-        const x = Math.random() * 200 - 100;
-        const y = Math.random() * 120 - 60;
-        noBtn.style.transform = `translate(${x}px, ${y}px)`;
-
-        if (noClicks > 2) {
+        if (noClicks > 1) {
             yesScale += 0.1;
             yesBtn.style.transform = `scale(${yesScale})`;
-            yesBtn.innerText = "YES 💕 (Getting closer...)";
+            yesBtn.innerText = "YES 💕 (You're almost there!)";
         }
-    });
+
+        if (noClicks > 4) {
+            yesBtn.innerText = "YES 💘 (Just click it already 😄)";
+        }
+    }
+
+    noBtn.addEventListener("mouseover", moveNoButton);
+    noBtn.addEventListener("click", moveNoButton); // also on click
 
     yesBtn.addEventListener("click", () => {
         card.innerHTML = `
             <div class="final">
                 <h1>I knew it! Miss Tabassum 🎉</h1>
-                
-<img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93" alt="Roses">
-                <h1>
-                    So you are the Valentine <br>
-                    of <br>
-                    <strong>Mr. Sattar ❤️</strong>
-                </h1>
+                <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93" alt="Roses">
+                <h1>So you are the Valentine <br> of <br> <strong>Mr. Sattar ❤️</strong></h1>
                 <p>Forever and always 💑</p>
-                <p>(I mean, we both knew you'd say yes eventually 😄)</p>
             </div>
         `;
     });
 
+    // Floating hearts animation like before
     setInterval(() => {
         const heart = document.createElement("div");
         heart.className = "heart";
